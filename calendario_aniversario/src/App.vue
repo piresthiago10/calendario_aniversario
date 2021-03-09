@@ -1,28 +1,51 @@
 <template>
-  <div>
-    <table>
-      <tr>
-        <th>Id</th>
-        <th>Nome</th>
-        <th>Data de Aniversário</th>
-      </tr>
-      <tr v-for="aniversario of aniversarios">
-        <!-- {{aniversarios.nome}}
-      {{aniversarios.data_aniversario}}  -->
+  <div class="content">
+    <h2>{{ titulo }}</h2>
+
+    <input
+      type="search"
+      class="filtro"
+      @:input="filtro = $event.target.value"
+      placeholder="Filtre pela data de aniversário"
+    />
+    {{ filtro }}
+
+    <tabela-aniversario :titulo="aniversarios.nome">
+      <tr v-for="aniversario of aniversariosComFiltro">
         <td>01</td>
-        <td>Teste</td>
-        <td>01/01/1999</td>
+        <td>teste</td>
+        <td>21/07/1997</td>
       </tr>
-    </table>
+    </tabela-aniversario>
   </div>
 </template>
 
 <script>
+import Aniversarios from "./components/shared/aniversario/Aniversario.vue";
+
 export default {
+  components: {
+    "tabela-aniversario": Aniversarios,
+  },
+
   data() {
     return {
+      titulo: "Calendário de Aniversários",
       aniversarios: [],
+      filtro: ''
     };
+  },
+
+  computed: {
+
+    aniversariosComFiltro() {
+
+    if(this.filtro) {
+      let exp = new RegExp(this.filtro.trim(), 'i');
+      return this.aniversarios.filter(aniversario => exp.test(aniversario.data_aniversario));
+    }else {
+      return this.aniversarios;
+    }}
   },
 
   created() {
@@ -38,19 +61,8 @@ export default {
 </script>
 
 <style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
+.filtro {
+  display: block;
   width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
 }
 </style>
