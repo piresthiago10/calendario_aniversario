@@ -1,11 +1,12 @@
 <template>
   <div>
-    <h2>{{ titulo }}</h2>
+    <h2 class="centralizado">{{ titulo }}</h2>
     <table>
       <tr>
         <th>ID</th>
         <th>Nome</th>
         <th>Aniversário</th>
+        <th>Opções</th>
       </tr>
 
         <slot> </slot>
@@ -36,5 +37,9 @@ th {
 
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+
+.centralizado {
+  text-align: center;
 }
 </style>

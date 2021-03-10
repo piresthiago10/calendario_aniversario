@@ -1,17 +1,32 @@
 <template>
   <div class="content">
-    <nav>
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/cadastro">Cadastro</router-link></li>
-      </ul>
-    </nav>
-    <router-view></router-view>
+
+    <topo-menu :rotas="routes">
+
+    </topo-menu>
+  
+    <transition name="pagina">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
 <script>
-export default {};
+import { routes } from "./routes";
+import Menu from './components/shared/menu/Menu.vue';
+
+export default {
+
+  components: {
+    'topo-menu': Menu
+  },
+
+  data() {
+    return {
+      routes,
+    };
+  },
+};
 </script>
 
 <style>
@@ -20,13 +35,13 @@ export default {};
   width: 90%;
   margin: 0 auto;
 }
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
 
-li {
-  display: inline;
+.pagina-enter-active,
+.pagina-leave-active {
+  transition: opacity 0.3s;
+}
+.pagina-enter,
+.pagina-leave-active {
+  opacity: 0;
 }
 </style>
