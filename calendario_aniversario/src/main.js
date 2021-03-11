@@ -12,6 +12,8 @@ const router = new VueRouter({
   mode: 'history'
 })
 
+Vue.http.options.root = 'minha_api';
+
 new Vue({
   el: '#app',
   router,

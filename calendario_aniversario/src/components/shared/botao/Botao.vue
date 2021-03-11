@@ -21,14 +21,24 @@ export default {
       default: "padrao",
       type: String,
     },
+
+    confirmacao: {
+      required: true,
+      type: Boolean,
+    },
   },
 
   methods: {
     disparaAcao() {
-      if (confirm("Confirma operação?")) {
-        this.$emit("botaoAtivdo");
+      if (this.confirmacao) {
+        if (confirm("Confirma operção?")) {
+          this.$emit("botaoAtivado");
+        }
+        // return vazio sai do método
+        return;
       }
-    },
+      this.$emit('botaoAtivado');
+    }
   },
 
      computed: {

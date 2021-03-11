@@ -1,10 +1,10 @@
 <template>
   <div class="content">
     <h2>{{ titulo }}</h2>
-
+    <p v-show="mensagem" class="centralizado">{{ mensagem }}</p>
     <input
       type="search"
-      class="filtro"
+      class="field"
       @:input="filtro = $event.target.value"
       placeholder="Filtre pela data de aniversário"
     />
@@ -16,15 +16,13 @@
         <td>teste</td>
         <td>21/07/1997</td>
         <td>
-          <meu-botao
-            rotulo="editar"
-            tipo="button"
-            @botaoAtivado="remove(aniversario)"
-            estilo="padrao"
-          />
+          <router-link :to="{ name: 'cadastro', params: { id : aniversario.id }} ">
+            <meu-botao rotulo="Alterar" tipo="button" />
+          </router-link>
           <meu-botao
             rotulo="remover"
             tipo="button"
+            :confirmacao="true"
             @botaoAtivado="remove(aniversario)"
             estilo="perigo"
           />
@@ -38,25 +36,20 @@
 import Aniversarios from "../shared/aniversario/Aniversario.vue";
 import Botao from "../shared/botao/Botao.vue";
 
+import AniversarioService from "../../domain/aniversario/AniversarioService.js";
+
 export default {
   components: {
     "tabela-aniversario": Aniversarios,
     "meu-botao": Botao,
   },
 
-  methods: {
-    remove(aniversario) {
-      if (confirm("Confirma?")) {
-        alert(aniversario);
-      }
-    },
-  },
-
   data() {
     return {
-      titulo: "Calendário de Aniversários",
+      titulo: "Lista de Aniversários",
       aniversarios: [],
       filtro: "",
+      mensagem: "",
     };
   },
 
@@ -73,13 +66,29 @@ export default {
     },
   },
 
+  methods: {
+    remove(aniversario) {
+      this.service.apaga(aniversario.id).then(
+        () => {
+          let indice = this.aniversarios.ondexOf(aniversario);
+          this.aniversarios.splice(indice, 1);
+          this.mensagem = "Aniversário removido com sucesso";
+        },
+        err => this.mensagem = err.message
+      );
+    },
+  },
+
   created() {
-    this.$http
-      .get("https://swapi.dev/api/planets/")
-      .then((res) => res.json())
+    this.service = new AniversarioService(this.$resource);
+
+    this.service
+      .lista()
       .then(
-        (aniversarios) => (this.aniversarios = aniversarios),
-        (err) => console.log(err)
+        (aniversarios) =>
+          (this.aniversarios = (aniversarios) => console.log(err)),
+          err => this.mensagem = err.message
+
       );
   },
 };
@@ -90,11 +99,12 @@ body {
   background-color: #f2f2f2;
 }
 
-.filtro {
+.field {
   display: block;
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
+  font-size: 1.2em;
 }
 </style>
