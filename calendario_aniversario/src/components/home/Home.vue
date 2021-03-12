@@ -12,12 +12,12 @@
 
     <tabela-aniversario :titulo="aniversarios.nome">
       <tr v-for="aniversario of aniversariosComFiltro">
-        <td>01</td>
-        <td>teste</td>
-        <td>21/07/1997</td>
+        <td>{{ aniversario.id }}</td>
+        <td>{{ aniversario.nome }}</td>
+        <td>{{ aniversario.data_aniversario }}</td>
         <td>
-          <router-link :to="{ name: 'cadastro', params: { id : aniversario.id }} ">
-            <meu-botao rotulo="Alterar" tipo="button" />
+          <router-link :to="{ name: 'altera', params: { id : aniversario.id }} ">
+            <meu-botao rotulo="Alterar" tipo="button" :confirmacao="true"/>
           </router-link>
           <meu-botao
             rotulo="remover"
@@ -70,7 +70,7 @@ export default {
     remove(aniversario) {
       this.service.apaga(aniversario.id).then(
         () => {
-          let indice = this.aniversarios.ondexOf(aniversario);
+          let indice = this.aniversarios.indexOf(aniversario);
           this.aniversarios.splice(indice, 1);
           this.mensagem = "Aniversário removido com sucesso";
         },
@@ -84,11 +84,8 @@ export default {
 
     this.service
       .lista()
-      .then(
-        (aniversarios) =>
-          (this.aniversarios = (aniversarios) => console.log(err)),
+      .then(aniversarios => this.aniversarios = aniversarios,
           err => this.mensagem = err.message
-
       );
   },
 };
