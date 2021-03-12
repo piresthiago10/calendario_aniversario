@@ -8,22 +8,35 @@
       <div class="controle">
         <label for="nome">Nome</label>
         <input
+          name="nome"
           v-model="aniversario.nome"
           class="field"
           id="nome"
           autocomplete="off"
+          v-validate
+          data-vv-rules="required|min:3|max:30"
         />
+        <span class="erro" v-show="errors.has('nome')">{{
+          errors.first("nome")
+        }}</span>
       </div>
 
       <div class="controle">
         <label for="dataAniversario">Data de aniversário</label>
         <input
+          name="aniversario"
           v-model="aniversario.dataAniversario"
           class="field"
           id="dataAniversario"
           type="date"
           autocomplete="off"
+          v-validate
+          data-vv-rules="required|min:10"
+          data-vv-as="aniversário"
         />
+        <span class="erro" v-show="errors.has('aniversario')">{{
+          errors.first("aniversario")
+        }}</span>
       </div>
 
       <div class="centralizado">
@@ -51,28 +64,35 @@ export default {
     return {
       aniversario: new Aniversario(),
       resource: {},
-      id: this.$route.params.id
+      id: this.$route.params.id,
     };
   },
 
   methods: {
     grava() {
-      this.service.cadastra(this.aniversario)
-      .then(() => {
-        if(this.id) this.$router.push({ name: 'home' });
-        this.aniversario = new Aniversario()},
-        err => console.log(err));
+      this.$validator.validateAll().then((success) => {
+        if (success) {
+          this.service.cadastra(this.aniversario).then(
+            () => {
+              if (this.id) this.$router.push({ name: "home" });
+              this.aniversario = new Aniversario();
+            },
+            (err) => console.log(err)
+          );
+        }
+      });
     },
   },
 
-    created() {
-
+  created() {
     this.service = new AniversarioService(this.$resource);
 
-    if(this.id) {
-      this.service.busca(this.id).then(aniversario => this.aniversario = aniversario);
+    if (this.id) {
+      this.service
+        .busca(this.id)
+        .then((aniversario) => (this.aniversario = aniversario));
     }
-  }
+  },
 };
 </script>
 
@@ -101,5 +121,9 @@ export default {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
+}
+
+.erro {
+  color: red;
 }
 </style>
