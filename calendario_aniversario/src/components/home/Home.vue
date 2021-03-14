@@ -5,10 +5,10 @@
     <input
       type="search"
       class="field"
-      @:input="filtro = $event.target.value"
+      @input="filtro = $event.target.value"
       placeholder="Filtre pela data de aniversário"
     />
-    {{ filtro }}
+    <!-- {{ filtro }} -->
 
     <tabela-aniversario :titulo="aniversarios.nome">
       <tr v-for="aniversario of aniversariosComFiltro">
@@ -46,18 +46,18 @@ export default {
 
   data() {
     return {
-      titulo: "Lista de Aniversários",
+      titulo: 'Lista de Aniversários',
       aniversarios: [],
-      filtro: "",
-      mensagem: "",
+      filtro: '',
+      mensagem: '',
     };
   },
 
   computed: {
     aniversariosComFiltro() {
-      if (this.filtro) {
-        let exp = new RegExp(this.filtro.trim(), "i");
-        return this.aniversarios.filter((aniversario) =>
+      if(this.filtro) {
+        let exp = new RegExp(this.filtro.trim(), 'i');
+        return this.aniversarios.filter(aniversario =>
           exp.test(aniversario.data_aniversario)
         );
       } else {
