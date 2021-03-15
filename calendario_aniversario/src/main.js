@@ -23,7 +23,7 @@ const router = new VueRouter({
   mode: 'history'
 })
 
-Vue.http.options.root = 'minha_api';
+Vue.http.options.root = 'http://localhost:8000';
 
 new Vue({
   el: '#app',

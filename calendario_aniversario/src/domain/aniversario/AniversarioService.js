@@ -2,14 +2,14 @@ export default class AniversarioService {
 
     constructor(resource) {
 
-        this._resource = resource('aniversarios{/id}');
+        this._resource = resource('aniversarios{/id}/');
     }
 
     cadastra(aniversario) {
 
-        if(aniversario._id) {
+        if(aniversario.id) {
 
-            return this._resource.update({ id: aniversario._id }, aniversario);
+            return this._resource.update({ id: aniversario.id }, aniversario);
 
         } else {
 
@@ -35,9 +35,9 @@ export default class AniversarioService {
     }
 
     busca(id) {
-        return this._resource.get({ id }).then(null, err => {
+        return this._resource.get({ id }).then(res => res.json(), err => {
             console.log(err);
-            throw new Error('Não foi possível remover o registro. Tente novamente mais tarde');
+            throw new Error('Não foi possível encontrar o registro. Tente novamente mais tarde');
         });
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 v-if="foto._id" class="centralizado">Inclusão</h1>
+    <h1 v-if="aniversario._id" class="centralizado">Inclusão</h1>
     <h1 v-else class="centralizado">Alteração</h1>
     <h2 class="centralizado">{{ aniversario.nome }}</h2>
 
@@ -24,11 +24,12 @@
       <div class="controle">
         <label for="dataAniversario">Data de aniversário</label>
         <input
+          type="text"
+          pattern="\d{1,2}/\d{1,2}/\d{4}"
           name="aniversario"
-          v-model="aniversario.dataAniversario"
+          v-model="aniversario.data_aniversario"
           class="field"
           id="dataAniversario"
-          type="date"
           autocomplete="off"
           v-validate
           data-vv-rules="required|min:10"
@@ -41,7 +42,7 @@
 
       <div class="centralizado">
         <meu-botao rotulo="GRAVAR" tipo="submit" :confirmacao="true" />
-        <router-link to="{name: 'home'}"
+        <router-link :to="{name: 'home'}"
           ><meu-botao rotulo="VOLTAR" tipo="button" :confirmacao="true"
         /></router-link>
       </div>
@@ -63,25 +64,24 @@ export default {
   data() {
     return {
       aniversario: new Aniversario(),
-      resource: {},
       id: this.$route.params.id,
     };
   },
 
   methods: {
     grava() {
-      this.$validator.validateAll().then((success) => {
+      this.$validator.validateAll().then(success => {
         if (success) {
           this.service.cadastra(this.aniversario).then(
             () => {
               if (this.id) this.$router.push({ name: "home" });
               this.aniversario = new Aniversario();
             },
-            (err) => console.log(err)
+            err => console.log(err)
           );
         }
       });
-    },
+    }
   },
 
   created() {
@@ -90,7 +90,7 @@ export default {
     if (this.id) {
       this.service
         .busca(this.id)
-        .then((aniversario) => (this.aniversario = aniversario));
+        .then(aniversario => this.aniversario = aniversario);
     }
   },
 };
