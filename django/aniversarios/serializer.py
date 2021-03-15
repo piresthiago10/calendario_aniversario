@@ -15,7 +15,7 @@ class AniversarioSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
 
-        nome = data['nome']
+        nome = data['nome'].replace(" ", "")
         data_aniversario = datetime.strptime(data['data_aniversario'], '%d/%m/%Y').date()
         print(f"data {data_aniversario}")
         if not nome_valido(nome):
