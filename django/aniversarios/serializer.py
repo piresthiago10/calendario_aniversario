@@ -14,9 +14,13 @@ class AniversarioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
+        """ Valida nome e data de aniversário """
 
+        # remove os espaços da variavel nome para
+        # não gerar conflito com o validador de nome
         nome = data['nome'].replace(" ", "")
-        data_aniversario = datetime.strptime(data['data_aniversario'], '%d/%m/%Y').date()
+        data_aniversario = datetime.strptime(
+            data['data_aniversario'], '%d/%m/%Y').date()
         print(f"data {data_aniversario}")
         if not nome_valido(nome):
             raise serializers.ValidationError(
